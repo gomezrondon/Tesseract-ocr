@@ -13,9 +13,23 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
 	mavenCentral()
+
+
+	maven {
+		url = uri("https://jitpack.io")
+	}
+
+
 }
 
 dependencies {
+
+	//translator
+	//https://www.youtube.com/watch?v=-AMoR_WPV_M
+	//https://github.com/goxr3plus/java-google-translator/blob/master/pom.xml
+	implementation("com.github.goxr3plus:java-google-speech-api:8.0.0")
+
+	//OCR
 	implementation("net.sourceforge.tess4j:tess4j:4.2.1")
 
 	implementation("org.springframework.boot:spring-boot-starter")
