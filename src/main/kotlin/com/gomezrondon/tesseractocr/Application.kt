@@ -11,25 +11,66 @@ import com.darkprograms.speech.translator.GoogleTranslate;
 
 @SpringBootApplication
 class Application:CommandLineRunner {
-	override fun run(vararg args: String?) {
-		val tesseract = Tesseract()
-		tesseract.setDatapath("""tessdata""")
 
-		val inputFile = File("image/"+args[0])
-		val text = tesseract.doOCR(inputFile)
+	companion object {
+		const val TRANSLATE = "translate"
+		const val OCR = "ocr"
+	}
+
+	override fun run(vararg args: String?) {
+
+		//french.png ocr transale
+
+		val argList = args.toMutableList()
 
 		if (!File("out-text").isDirectory) {
 			File("out-text").mkdir()
 		}
-		val output ="out-text/"+inputFile.name.split(".")[0]+".txt"
-		val output_trans ="out-text/"+inputFile.name.split(".")[0]+"_tranlated.txt"
-		File(output).writeText(text)
 
-		val translate = GoogleTranslate.translate("es", text)
-		File(output_trans).writeText(translate)
+		val imageFile = File("image/" + argList[0])
+		val fileName = getFileNameWithOutExt(imageFile)
+
+		val outputTextFileName = if (args.contains(OCR)) {
+			val text = generateTextFromImage(imageFile)
+			val outputTextFileName = "out-text/$fileName.txt"
+			writeToFile(outputTextFileName, text)
+			outputTextFileName
+		} else {
+			""
+		}
+
+		if (args.contains(TRANSLATE) && args.contains(OCR)) {
+			translateFromFile(outputTextFileName, fileName)
+		} else {
+			translateFromFile("out-text/" +imageFile.name, fileName)
+		}
 
 
 	}
+
+	private fun generateTextFromImage(imageFile: File): String {
+		val tesseract = Tesseract()
+		tesseract.setDatapath("""tessdata""")
+		val text = tesseract.doOCR(imageFile)
+		return text
+	}
+
+	private fun getFileNameWithOutExt(imageFile: File): String {
+		return imageFile.nameWithoutExtension
+	}
+
+	private fun translateFromFile(inputFileText: String, inputFileName: String) {
+		val output_trans ="out-text/${inputFileName}_tranlated.txt"
+		val inputText = File(inputFileText).readText()
+		val translate = GoogleTranslate.translate("es", inputText)
+		writeToFile(output_trans, translate)
+	}
+
+	private fun writeToFile(outputText: String, text: String) {
+		File(outputText).writeText(text)
+	}
+
+
 }
 
 fun main(args: Array<String>) {
