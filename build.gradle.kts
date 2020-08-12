@@ -24,6 +24,7 @@ repositories {
 
 dependencies {
 
+	implementation("org.jsoup:jsoup:1.13.1")
 	//translator
 	//https://www.youtube.com/watch?v=-AMoR_WPV_M
 	//https://github.com/goxr3plus/java-google-translator/blob/master/pom.xml
