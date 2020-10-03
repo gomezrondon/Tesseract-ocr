@@ -1,10 +1,6 @@
-from PIL import ImageGrab
-
-
-
-if __name__ == "__main__":
-    img = ImageGrab.grabclipboard()
-
-    # Save the image to disk
-    img.save('image/paste.png', 'PNG')
-    #img.save('paste.jpg', 'JPEG')
+from PIL import ImageGrab  #pip install --upgrade Pillow
+im = ImageGrab.grabclipboard()
+try:
+    im.save('image/paste.png', "PNG")
+except AttributeError:
+    print("Couldn't save image {}".format('image/paste.png'))
